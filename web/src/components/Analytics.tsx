@@ -5,12 +5,7 @@ import {
   Pie,
   Cell,
   Tooltip,
-  XAxis,
-  YAxis,
-  CartesianGrid,
   ResponsiveContainer,
-  LineChart,
-  Line,
 } from "recharts";
 
 interface Transaction {
@@ -24,10 +19,6 @@ interface CategorySummary {
   [category: string]: number;
 }
 
-interface DailySummary {
-  [date: string]: number;
-}
-
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#00bcd4", "#a4de6c"];
 
 export default function Analytics() {
@@ -35,7 +26,6 @@ export default function Analytics() {
   const [totalSpent, setTotalSpent] = useState<number>(0);
   const [averageSpent, setAverageSpent] = useState<number>(0);
   const [categorySummary, setCategorySummary] = useState<CategorySummary>({});
-  const [dailySummary, setDailySummary] = useState<{ date: string; amount: number }[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,49 +37,34 @@ export default function Analytics() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-  
+
         const data = response.data;
         setTransactions(data);
-  
+
         const total = data.reduce((sum, txn) => sum + txn.amount, 0);
         setTotalSpent(total);
-  
+
         const avg = data.length > 0 ? total / data.length : 0;
         setAverageSpent(avg);
-  
+
         const categoryMap: CategorySummary = {};
-        const dateMap: DailySummary = {};
-  
         data.forEach((txn) => {
-          // Use txn.date if present, otherwise fall back to txn.createdAt
-          const date = txn.date ? new Date(txn.date) : txn.createdAt ? new Date(txn.createdAt) : null;
-          
-          if (date && !isNaN(date.getTime())) {  // Check if it's a valid date
-            categoryMap[txn.category] = (categoryMap[txn.category] || 0) + txn.amount;
-  
-            const dateKey = date.toISOString().split("T")[0]; // YYYY-MM-DD
-            dateMap[dateKey] = (dateMap[dateKey] || 0) + txn.amount;
+          if (categoryMap[txn.category]) {
+            categoryMap[txn.category] += txn.amount;
           } else {
-            console.error("Missing date or createdAt field:", txn);  // Log if neither date nor createdAt is available
+            categoryMap[txn.category] = txn.amount;
           }
         });
-  
+
         setCategorySummary(categoryMap);
-  
-        const dailyData = Object.entries(dateMap)
-          .map(([date, amount]) => ({ date, amount }))
-          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  
-        setDailySummary(dailyData);
       } catch (error) {
         console.error("Error fetching analytics data:", error);
       }
     };
-  
+
     fetchData();
   }, []);
-  ;
-  
+
   const pieData = Object.entries(categorySummary).map(([category, amount]) => ({
     name: category,
     value: amount,
@@ -129,7 +104,6 @@ export default function Analytics() {
           </ResponsiveContainer>
         </div>
       </div>
-
     </div>
   );
 }
