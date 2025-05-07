@@ -20,7 +20,7 @@ export default function Transactions() {
         const token = localStorage.getItem("token");
 
         // Make the GET request with the token in the headers
-        const response = await axios.get('http://localhost:3000/api/v1/expense/transactions', {
+        const response = await axios.get(`${import.meta.env.BACKEND_URL}/api/v1/expense/transactions`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

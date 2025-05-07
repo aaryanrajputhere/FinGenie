@@ -38,7 +38,7 @@ export default function Chat() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post<{ amount: number; tag: string }>(
-        'http://localhost:3000/api/v1/expense/process_spending',
+        `${import.meta.env.BACKEND_URL}api/v1/expense/process_spending`,
         { sentence: text },
         { headers: { Authorization: `Bearer ${token}` } }
       );

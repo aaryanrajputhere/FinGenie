@@ -4,8 +4,7 @@ import {
   PieChart,
   Pie,
   Cell,
-  Tooltip,
-  
+  Tooltip,  
   XAxis,
   YAxis,
   CartesianGrid,
@@ -43,7 +42,7 @@ export default function Analytics() {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "http://localhost:3000/api/v1/expense/transactions",
+          `${import.meta.env.BACKEND_URL}api/v1/expense/transactions`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
