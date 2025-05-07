@@ -2,10 +2,10 @@ import express, { Request, Response } from 'express';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { PrismaClient } from '@prisma/client';
 import authMiddleware from '../middleware/authMiddleware';
-
+const GEMINI_KEY = process.env.GEMINI_KEY;
 const router = express.Router();
 const prisma = new PrismaClient();
-const genAI = new GoogleGenerativeAI('AIzaSyB9sXa0KXkSHtrKoC-9Id0U4QreYrullC8');
+const genAI = new GoogleGenerativeAI(<String>GEMINI_KEY);
 
 router.post('/process_spending',authMiddleware, async (req: any, res: any) => {
     const sentence = (req.body.sentence || '').toLowerCase();
