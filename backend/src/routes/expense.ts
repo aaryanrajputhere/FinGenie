@@ -5,7 +5,7 @@ import authMiddleware from '../middleware/authMiddleware';
 const GEMINI_KEY = process.env.GEMINI_KEY;
 const router = express.Router();
 const prisma = new PrismaClient();
-const genAI = new GoogleGenerativeAI(<String>GEMINI_KEY);
+const genAI = new GoogleGenerativeAI(<string>GEMINI_KEY);
 
 router.post('/process_spending',authMiddleware, async (req: any, res: any) => {
     const sentence = (req.body.sentence || '').toLowerCase();

@@ -78,7 +78,7 @@ userRouter.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, funct
         },
     });
     // Generate JWT token
-    const token = jsonwebtoken_1.default.sign({ userId: newUser.id, email: newUser.email }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jsonwebtoken_1.default.sign({ userId: newUser.id, email: newUser.email }, JWT_SECRET, { expiresIn: '30d' });
     return res.status(201).json({
         message: "User signed up successfully",
         token,
@@ -103,7 +103,7 @@ userRouter.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.status(400).json({ message: "Invalid password" });
     }
     // Generate JWT token
-    const token = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '30d' });
     return res.status(200).json({
         message: "User logged in successfully",
         token,
