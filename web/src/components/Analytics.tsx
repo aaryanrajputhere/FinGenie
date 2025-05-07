@@ -4,7 +4,7 @@ import {
   PieChart,
   Pie,
   Cell,
-  Tooltip,  
+  Tooltip,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -41,14 +41,14 @@ export default function Analytics() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
+        const response = await axios.get<Transaction[]>(
           `${import.meta.env.BACKEND_URL}api/v1/expense/transactions`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
 
-        const data: Transaction[] = response.data;
+        const data = response.data;
         setTransactions(data);
 
         const total = data.reduce((sum, txn) => sum + txn.amount, 0);
@@ -63,7 +63,7 @@ export default function Analytics() {
         data.forEach((txn) => {
           categoryMap[txn.category] = (categoryMap[txn.category] || 0) + txn.amount;
 
-          const dateKey = new Date(txn.date).toISOString().split("T")[0]; // format: YYYY-MM-DD
+          const dateKey = new Date(txn.date).toISOString().split("T")[0]; // YYYY-MM-DD
           dateMap[dateKey] = (dateMap[dateKey] || 0) + txn.amount;
         });
 
@@ -86,14 +86,6 @@ export default function Analytics() {
     name: category,
     value: amount,
   }));
-
-  const barData = [
-    {
-      name: "Spending",
-      Total: parseFloat(totalSpent.toFixed(2)),
-      Average: parseFloat(averageSpent.toFixed(2)),
-    },
-  ];
 
   return (
     <div className="max-w-5xl mx-auto mt-10 bg-black text-white p-6 rounded-xl shadow-md border border-gray-800">
@@ -120,7 +112,7 @@ export default function Analytics() {
                 fill="#8884d8"
                 dataKey="value"
               >
-                {pieData.map((entry, index) => (
+                {pieData.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
@@ -128,11 +120,9 @@ export default function Analytics() {
             </PieChart>
           </ResponsiveContainer>
         </div>
-
-      
       </div>
 
-      {/* Timeline Chart */}
+      {/* Line Chart */}
       <div>
         <h3 className="text-xl font-semibold mb-2">Spending Over Time</h3>
         <ResponsiveContainer width="100%" height={300}>
