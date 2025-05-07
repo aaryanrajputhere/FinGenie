@@ -39,7 +39,7 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const response = await axios.post<ApiResponse>(`${import.meta.env.BACKEND_URL}/user/login`, {
+      const response = await axios.post<ApiResponse>(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/login`, {
         email: formState.email,
         password: formState.password
       });

@@ -50,7 +50,7 @@ export default function Signup() {
     setIsLoading(true);
     try{
       
-      const response = await axios.post<ApiResponse>(`${import.meta.env.BACKEND_URL}/api/v1/user/signup`, {
+      const response = await axios.post<ApiResponse>(`${import.meta.env.VITE_BACKEND_URL}/api/v1/user/signup`, {
         name: formState.name,
         email: formState.email,
         password: formState.password,

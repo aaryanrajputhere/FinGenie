@@ -14,10 +14,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
-
         </Routes>
       </Router>
-  
   );
 }
 

@@ -2,25 +2,27 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 // Define the type for a single transaction
-interface Transaction {
-  date: string;
+export interface Transaction {
+  id: string;
+  userId: string;
   amount: number;
   category: string;
-  createdAt: string; // assuming it's a date string from the API
+  sentence: string;
+  createdAt: string; // ISO string
+  updatedAt: string; // ISO string
 }
 
+// The API returns an array of transactions directly
+
 export default function Transactions() {
-  // Type the state with the Transaction type
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        // Get token from local storage
         const token = localStorage.getItem("token");
 
-        // Make the GET request with the token in the headers
-        const { data } = await axios.get<Transaction[]>(
+        const response = await axios.get<unknown>(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/expense/transactions`,
           {
             headers: {
@@ -29,7 +31,15 @@ export default function Transactions() {
           }
         );
 
-        setTransactions(data); // Now properly typed
+        // Log to verify the structure during development
+        console.log("API Response:", response.data);
+
+        // Check if the response is an array
+        if (Array.isArray(response.data)) {
+          setTransactions(response.data as Transaction[]);
+        } else {
+          console.error("Invalid API response format", response.data);
+        }
       } catch (error) {
         console.error("Error fetching transactions:", error);
       }
@@ -38,10 +48,9 @@ export default function Transactions() {
     fetchTransactions();
   }, []);
 
-  // Helper function to format the date
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
-    return date.toLocaleDateString(); // You can customize the format as needed
+    return date.toLocaleDateString();
   };
 
   return (
@@ -56,9 +65,9 @@ export default function Transactions() {
           </tr>
         </thead>
         <tbody>
-          {transactions.map((txn, index) => (
+          {transactions.slice().reverse().map((txn) => (
             <tr
-              key={index}
+              key={txn.id}
               className="border-b border-gray-800 hover:bg-gray-800 transition-colors"
             >
               <td className="py-2">{formatDate(txn.createdAt)}</td>
