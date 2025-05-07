@@ -20,15 +20,18 @@ export default function Transactions() {
         const token = localStorage.getItem("token");
 
         // Make the GET request with the token in the headers
-        const response = await axios.get(`${import.meta.env.BACKEND_URL}/api/v1/expense/transactions`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log(response);
-        setTransactions(response.data); // Assuming response.data contains the transaction data
+        const { data } = await axios.get<Transaction[]>(
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/expense/transactions`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setTransactions(data); // Now properly typed
       } catch (error) {
-        console.error('Error fetching transactions:', error);
+        console.error("Error fetching transactions:", error);
       }
     };
 
@@ -47,7 +50,6 @@ export default function Transactions() {
       <table className="w-full table-auto border-collapse">
         <thead>
           <tr className="text-left border-b border-gray-700">
-            {/* Renamed "Created At" to "Date" */}
             <th className="pb-2">Date</th>
             <th className="pb-2">Amount Spent</th>
             <th className="pb-2">Category</th>
@@ -59,7 +61,7 @@ export default function Transactions() {
               key={index}
               className="border-b border-gray-800 hover:bg-gray-800 transition-colors"
             >
-              <td className="py-2">{formatDate(txn.createdAt)}</td> {/* Use createdAt for "Date" */}
+              <td className="py-2">{formatDate(txn.createdAt)}</td>
               <td className="py-2">{txn.amount}</td>
               <td className="py-2">{txn.category}</td>
             </tr>
@@ -68,5 +70,4 @@ export default function Transactions() {
       </table>
     </div>
   );
-  
 }
