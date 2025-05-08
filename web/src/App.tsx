@@ -5,7 +5,7 @@ import Login from './pages/login';
 import Transactions from './pages/transactions';
 import AnalyticsPage from './pages/analytics';
 import Header from './components/Header';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type JSX } from 'react';
 import axios from 'axios';
 interface User {
   id: string;
