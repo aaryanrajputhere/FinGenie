@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Signup from './pages/signup';
 import Home from './pages/home';
 import Login from './pages/login';
@@ -7,6 +7,7 @@ import AnalyticsPage from './pages/analytics';
 import Header from './components/Header';
 import { useEffect, useState, type JSX } from 'react';
 import axios from 'axios';
+
 interface User {
   id: string;
   name: string;
@@ -14,9 +15,10 @@ interface User {
   createdAt: string;
 }
 
-function App() {
+function AppWrapper() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -48,11 +50,17 @@ function App() {
     return user ? element : <Navigate to="/login" replace />;
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-500"></div>
+    </div>
+  );
+  
+  const hideHeader = location.pathname === '/login' || location.pathname === '/signup';
 
   return (
-    <Router>
-      <Header user={user} />
+    <>
+      {!hideHeader && <Header user={user} />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signup" element={<Signup />} />
@@ -60,6 +68,14 @@ function App() {
         <Route path="/transactions" element={<PrivateRoute element={<Transactions />} />} />
         <Route path="/analytics" element={<PrivateRoute element={<AnalyticsPage />} />} />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppWrapper />
     </Router>
   );
 }

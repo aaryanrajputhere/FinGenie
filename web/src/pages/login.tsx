@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Loader } from 'lucide-react';
 
 interface FormData {
   email: string;
@@ -57,77 +58,87 @@ export default function Login() {
   };
   
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black text-white p-6">
-      <div className="w-full max-w-md">
-        <div className="mb-10 text-center">
-          <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-          <p className="text-gray-400">Log in to your account</p>
+    <div className="flex items-center justify-center min-h-screen bg-black">
+      <div className="max-w-md w-full mx-auto bg-black rounded-2xl shadow-2xl border border-gray-800 flex flex-col overflow-hidden">
+        {/* Login Header */}
+        <div className="p-6 bg-gradient-to-b from-black to-gray-900">
+          <h1 className="text-2xl font-bold text-white text-center mb-2">Welcome Back</h1>
+          <p className="text-gray-400 text-center">Log in to your account</p>
         </div>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
+        {/* Form Area */}
+        <div className="flex-1 p-6 space-y-5 bg-gradient-to-b from-gray-900 to-black">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email Input */}
-            <div className="border-b-2 border-gray-700">
+            <div className="bg-gray-800 rounded-full overflow-hidden pl-4 border border-gray-700">
               <input
                 type="email"
                 name="email"
                 value={formState.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
-                className="w-full py-3 px-4 bg-transparent outline-none"
+                className="w-full py-3 px-4 bg-transparent text-white text-sm outline-none"
                 required
                 aria-label="Email"
               />
             </div>
             
             {/* Password Input */}
-            <div className="border-b-2 border-gray-700">
+            <div className="bg-gray-800 rounded-full overflow-hidden pl-4 border border-gray-700">
               <input
                 type="password"
                 name="password"
                 value={formState.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
-                className="w-full py-3 px-4 bg-transparent outline-none"
+                className="w-full py-3 px-4 bg-transparent text-white text-sm outline-none"
                 required
                 aria-label="Password"
               />
             </div>
-          </div>
-          
-          <div className="text-right">
-            <a href="#" className="text-gray-400 hover:text-gray-300 text-sm">
-              Forgot password?
-            </a>
-          </div>
-          
-          <div className="pt-6">
+            
+            {/* Forgot Password Link */}
+            <div className="text-right">
+              <a href="#" className="text-emerald-500 hover:text-emerald-400 text-sm transition-colors">
+                Forgot password?
+              </a>
+            </div>
+            
+            {/* Submit Button */}
             <button 
               type="submit"
-              className="w-full bg-gray-800 hover:bg-gray-900 text-white font-medium py-3 px-4 rounded-md transition-all duration-300"
+              className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-medium py-3 px-4 rounded-full transition-all duration-300 flex items-center justify-center"
               aria-label="Log In"
               disabled={isLoading}
             >
-              {isLoading ? 'Logging in...' : 'Log In'}
+              {isLoading ? (
+                <>
+                  <Loader size={18} className="animate-spin mr-2" />
+                  <span>Logging in...</span>
+                </>
+              ) : (
+                'Log In'
+              )}
             </button>
-          </div>
+            
+            {/* Error Message */}
+            {error && (
+              <div className="p-3 bg-red-900/30 border border-red-800 rounded-lg text-red-400 text-sm text-center">
+                {error}
+              </div>
+            )}
+          </form>
           
-          {error && (
-            <div className="mt-4 text-red-500 text-sm text-center">
-              {error}
-            </div>
-          )}
-          
-          <div className="text-center text-gray-500 text-sm mt-6">
-            Don't have an account? 
-            <span 
-              className="text-gray-400 hover:text-gray-300 ml-1 cursor-pointer"
-              onClick={() => navigate('/signup')}
-            >
-              Sign up
-            </span>
+          {/* Signup Link */}
+          <div className="text-center text-gray-500 text-sm pt-4">
+            Don't have an account?{' '}
+            <Link to="/signup">
+              <span className="text-emerald-500 hover:text-emerald-400 transition-colors">
+                Sign up
+              </span>
+            </Link>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
