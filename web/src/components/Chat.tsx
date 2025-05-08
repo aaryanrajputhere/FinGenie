@@ -72,7 +72,7 @@ export default function Chat() {
       setMessages([
         { 
           sender: 'ai', 
-          text: 'Hey, I’m Fin Genie! Let me help you track your expenses and give you smart insights. Just tell me what you spent, like "I spent 120 on a Biryani.' 
+          text: 'Hey, I’m Fin Genie! Let me help you track your expenses and give you smart insights. Just tell me what you spent, like "I spent 120 on a Biryani."' 
         }
       ]);
     }
