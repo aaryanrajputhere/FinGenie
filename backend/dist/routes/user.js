@@ -50,6 +50,7 @@ const index_1 = require("../schema/index");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const client_1 = require("@prisma/client");
+const authMiddleware_1 = __importDefault(require("../middleware/authMiddleware"));
 dotenv_1.default.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 const prisma = new client_1.PrismaClient();
@@ -109,5 +110,27 @@ userRouter.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, functi
         token,
         user: { name: user.name, email: user.email },
     });
+}));
+userRouter.get("/user", authMiddleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.user.id;
+        const user = yield prisma.user.findFirst({
+            where: { id: userId },
+            select: {
+                id: true,
+                name: true,
+                email: true, // adjust based on what fields you want to return
+                createdAt: true
+            }
+        });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.json(user);
+    }
+    catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 }));
 exports.default = userRouter;

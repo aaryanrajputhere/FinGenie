@@ -82,6 +82,30 @@ userRouter.post('/login' , async (req: any, res: any) => {
       user: { name: user.name, email: user.email },
     });
 })
+userRouter.get("/user", authMiddleware, async (req: any, res: any) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await prisma.user.findFirst({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        email: true, // adjust based on what fields you want to return
+        createdAt: true
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 
 export default userRouter;

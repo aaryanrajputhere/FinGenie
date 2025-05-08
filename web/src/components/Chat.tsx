@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Chat() {
@@ -7,7 +8,7 @@ export default function Chat() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false); // For managing the loading state
   const bottomRef = useRef<HTMLDivElement>(null);
-
+  const navigate = useNavigate();
   // Function to handle sending a message
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -43,8 +44,10 @@ export default function Chat() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
-      console.log(response.data); // Log the response for debugging purposes
-      
+          // Handle 401 Unauthorized manually
+      if (response.status === 401) {
+        navigate('/signup')
+      }
       // Now you can safely access 'amount' and 'tag'
       const { amount, tag } = response.data;
       
