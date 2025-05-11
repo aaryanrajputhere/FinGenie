@@ -51,7 +51,7 @@ function CustomTooltip({ active, payload }: any) {
   return null;
 }
 
-export default function MonthlyChart({ transactions, lastUpdated }: MonthlyChartProps) {
+export default function MonthlyChart({ transactions }: MonthlyChartProps) {
   // States for chart type and selected month
   const [chartType, setChartType] = useState<"line" | "area">("area");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
