@@ -6,22 +6,7 @@ import {
     ResponsiveContainer,
   } from "recharts";
   
-  const CATEGORY_EMOJIS: Record<string, string> = {
-    food: "🍔",
-    transportation: "🚗",
-    shopping: "🛍️",
-    entertainment: "🎬",
-    bills: "📝",
-    health: "💊",
-    default: "💰",
-  };
-  
-  function getCategoryEmoji(category: string): string {
-    const matched = Object.keys(CATEGORY_EMOJIS).find((key) =>
-      category.toLowerCase().includes(key)
-    );
-    return matched ? CATEGORY_EMOJIS[matched] : CATEGORY_EMOJIS.default;
-  }
+ 
   
   function CustomTooltip({ active, payload, total }: any) {
     if (active && payload && payload.length) {

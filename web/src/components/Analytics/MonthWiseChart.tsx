@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+
 } from "recharts";
 import { format } from "date-fns";
 
@@ -37,7 +38,7 @@ function CustomTooltip({ active, payload }: any) {
           <span>{data.formattedMonth}</span>
         </p>
         <p className="text-emerald-400 font-medium">
-          ${data.amount.toFixed(2)}
+          ₹{data.amount.toLocaleString('en-IN')}
         </p>
         {data.previousMonth && (
           <p className="text-xs text-gray-400">
@@ -186,7 +187,7 @@ export default function MonthlyChart({ transactions, lastUpdated }: MonthlyChart
               tickLine={false}
               tick={{ fill: '#9CA3AF', fontSize: 12 }}
               domain={[0, 'dataMax + 100']}
-              tickFormatter={(value) => `₹${value}`}
+              tickFormatter={(value) => `₹${value.toLocaleString('en-IN')}`}
             />
             <Tooltip content={<CustomTooltip />} />
             <Line
@@ -239,15 +240,15 @@ export default function MonthlyChart({ transactions, lastUpdated }: MonthlyChart
                 ).key + "-01"), "MMMM yyyy")}
               </div>
               <div className="text-emerald-400">
-                ${chartData.reduce((prev, current) => 
+                ₹{chartData.reduce((prev, current) => 
                   (prev.amount > current.amount) ? prev : current
-                ).amount.toFixed(2)}
+                ).amount.toLocaleString('en-IN')}
               </div>
             </div>
             <div className="bg-gray-800 p-4 rounded-md">
               <div className="text-sm text-gray-400">Average Monthly</div>
               <div className="text-lg font-semibold text-white mt-1">
-                ${(chartData.reduce((sum, item) => sum + item.amount, 0) / Math.max(chartData.length, 1)).toFixed(2)}
+                ₹{Math.round(chartData.reduce((sum, item) => sum + item.amount, 0) / Math.max(chartData.length, 1)).toLocaleString('en-IN')}
               </div>
               <div className="text-xs text-gray-400 mt-1">
                 Based on {chartData.length} month{chartData.length !== 1 ? 's' : ''}
@@ -257,7 +258,7 @@ export default function MonthlyChart({ transactions, lastUpdated }: MonthlyChart
         )}
       </div>
 
-  
+    
     </div>
   );
 }
