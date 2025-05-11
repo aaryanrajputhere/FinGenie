@@ -109,8 +109,6 @@ export default function MonthlyChart({ transactions, lastUpdated }: MonthlyChart
     setSelectedMonth("");
   };
 
-  // Format date for last updated 
-  const formattedDate = lastUpdated || format(new Date(), "MMM d, yyyy");
 
   return (
     <div className="p-6 bg-gray-900 rounded-lg">
