@@ -5,7 +5,14 @@ import userRouter from './routes/user'
 import cors from "cors"
 const app = express();
 app.use(bodyParser.json());
-app.use(cors())
+const allowedOrigins = ['https://fingenieai.vercel.app'];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use('/api/v1/expense', expenseRouter);
 app.use('/api/v1/user' , userRouter)
 const PORT = process.env.PORT || 3000;
